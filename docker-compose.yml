@@ -21,7 +21,7 @@ services:
     image: api-gateway:1.0
     container_name: api-gateway
     ports:
-      - "9001:8080"
+      - "9001:9001"
     depends_on:
       - eureka-server
     env_file:
