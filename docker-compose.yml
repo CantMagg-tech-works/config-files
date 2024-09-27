@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   eureka-server:
-    build: ../eureka-server
+    build: ./eureka-server
     image: eureka-server:1.0
     container_name: eureka-server
     ports:
@@ -17,7 +17,7 @@ services:
       retries: 3
 
   api-gateway:
-    build: ../api-gateway
+    build: ./api-gateway
     image: api-gateway:1.0
     container_name: api-gateway
     ports:
@@ -31,7 +31,7 @@ services:
     restart: unless-stopped
 
   api-users:
-    build: ../api-users
+    build: ./api-users
     image: api-users:1.0
     container_name: api-users
     depends_on:
