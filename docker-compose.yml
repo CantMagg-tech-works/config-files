@@ -41,7 +41,7 @@ services:
     restart: unless-stopped
 
   database:
-    image: mi-postgres         
+    image: ../mi-postgres
     container_name: database
     env_file:
       - ./database/.env.postgres-data
