@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  eureka-server:
+    build: ../eureka-server
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - cant-magg-network
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8761/actuator/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+
+  api-gateway:
+    build: ../api-gateway
+    container_name: api-gateway
+    ports:
+      - "9001:8080"
+    depends_on:
+      - eureka-server
+    env_file:
+      - ./api-gateway/.env.api-gateway
+    networks:
+      - cant-magg-network
+    restart: unless-stopped
+
+  api-users:
+    build: ../api-users
+    container_name: api-users
+    depends_on:
+      - eureka-server
+    env_file:
+      - ./api-users/.env.api-users
+    networks:
+      - cant-magg-network
+    restart: unless-stopped
+
+  database:
+    image: mi-postgres         
+    container_name: database
+    env_file:
+      - ./database/.env.postgres-data
+    ports:
+      - "5432:5432"            
+    volumes:
+      - db_data:/var/lib/postgresql/data  
+    networks:
+      - cant-magg-network
+    restart: unless-stopped
+
+networks:
+  cant-magg-network:
+    driver: bridge
+
+volumes:
+  db_data:                     
