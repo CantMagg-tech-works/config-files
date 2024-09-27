@@ -3,6 +3,7 @@ version: '3.8'
 services:
   eureka-server:
     build: ../eureka-server
+    image: eureka-server:1.0
     container_name: eureka-server
     ports:
       - "8761:8761"
@@ -15,9 +16,9 @@ services:
       timeout: 10s
       retries: 3
 
-
   api-gateway:
     build: ../api-gateway
+    image: api-gateway:1.0
     container_name: api-gateway
     ports:
       - "9001:8080"
@@ -31,6 +32,7 @@ services:
 
   api-users:
     build: ../api-users
+    image: api-users:1.0
     container_name: api-users
     depends_on:
       - eureka-server
@@ -41,14 +43,15 @@ services:
     restart: unless-stopped
 
   database:
-    image: ../mi-postgres
-    container_name: database
+    build: ./postgres-data
+    image: postgres:1.0
+    container_name: postgres
     env_file:
-      - ./database/.env.postgres-data
+      - ./postgres-data/.env.postgres-data
     ports:
-      - "5432:5432"            
+      - "5432:5432"
     volumes:
-      - db_data:/var/lib/postgresql/data  
+      - db_data:/var/lib/postgresql/data
     networks:
       - cant-magg-network
     restart: unless-stopped
@@ -58,4 +61,4 @@ networks:
     driver: bridge
 
 volumes:
-  db_data:                     
+  db_data:
